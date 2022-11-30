@@ -3,8 +3,8 @@
 #include "ipv6.h"
 
 namespace jkl {
-namespace protocols {
-/** @addtogroup protocols
+namespace proto {
+/** @addtogroup proto
  *  @{
  */
 
@@ -180,7 +180,7 @@ bool string_to_address(std::string const& str_address,
  */
 std::ostream& operator<<(std::ostream& strm, ip_addr const& address);
 
-/** @} */  // end of protocols
+/** @} */  // end of proto
 
-}  // namespace protocols
+}  // namespace proto
 }  // namespace jkl

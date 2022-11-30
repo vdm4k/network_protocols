@@ -2,9 +2,9 @@
 #include <string>
 
 namespace jkl {
-namespace protocols {
+namespace proto {
 
-/** @defgroup protocols
+/** @defgroup proto
  *  @{
  */
 
@@ -157,7 +157,7 @@ inline bool string_to_address(std::string const& str_address,
  * @param address
  */
 std::ostream& operator<<(std::ostream& strm, ipv4 const& address);
-/** @} */  // end of protocols
+/** @} */  // end of proto
 
-}  // namespace protocols
+}  // namespace proto
 }  // namespace jkl

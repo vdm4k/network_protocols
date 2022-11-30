@@ -3,7 +3,7 @@
 #include <string.h>
 
 namespace jkl {
-namespace protocols {
+namespace proto {
 
 ip_addr::ip_addr(std::string const& addr) noexcept {
   if (addr.find(':') == std::string::npos) {
@@ -88,5 +88,5 @@ std::ostream& operator<<(std::ostream& strm, ip_addr const& address) {
   }
   return strm;
 }
-}  // namespace protocols
+}  // namespace proto
 }  // namespace jkl

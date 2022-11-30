@@ -2,7 +2,7 @@
 #include <protocols/ipv4.h>
 
 namespace jkl {
-namespace protocols {
+namespace proto {
 
 ipv4::ipv4(std::string const& addr) noexcept { string_to_address(addr, *this); }
 
@@ -19,5 +19,5 @@ bool string_to_address(std::string const& str_address,
 std::ostream& operator<<(std::ostream& strm, ipv4 const& address) {
   return strm << address_to_string(address);
 }
-}  // namespace protocols
+}  // namespace proto
 }  // namespace jkl

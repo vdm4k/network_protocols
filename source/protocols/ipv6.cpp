@@ -3,7 +3,7 @@
 #include <string.h>
 
 namespace jkl {
-namespace protocols {
+namespace proto {
 
 ipv6::ipv6(std::string const& addr) noexcept { string_to_address(addr, *this); }
 
@@ -26,5 +26,5 @@ bool string_to_address(std::string const& str_address,
 std::ostream& operator<<(std::ostream& strm, ipv6 const& address) {
   return strm << address_to_string(address);
 }
-}  // namespace protocols
+}  // namespace proto
 }  // namespace jkl
