@@ -11,7 +11,7 @@ namespace proto {
 /**
  * \brief ip v4/v6 address wrapper
  */
-class ip_addr {
+class ip_address {
  public:
   /**
    * ip address version
@@ -25,36 +25,36 @@ class ip_addr {
   /**
    * default constructor
    */
-  ip_addr() = default;
+  ip_address() = default;
 
   /**
    * ctor from string representation
    *
    * ctor from string for example "127.0.0.1" or "fe80::23a1:b152")
    */
-  explicit ip_addr(std::string const& addr) noexcept;
+  explicit ip_address(std::string const& addr) noexcept;
 
   /**
    * ctor from ipv4
    */
-  explicit ip_addr(ipv4 const& addr) noexcept
+  explicit ip_address(ipv4 const& addr) noexcept
       : _dword{addr.get_data(), 0, 0, 0}, _version(version::e_v4) {}
 
   /**
    * ctor from ipv6
    */
-  explicit ip_addr(ipv6 const& addr) noexcept;
+  explicit ip_address(ipv6 const& addr) noexcept;
 
   /**
    * ctor from ip_addr
    */
-  ip_addr(ip_addr const& addr) noexcept
+  ip_address(ip_address const& addr) noexcept
       : _qword{addr._qword[0], addr._qword[1]}, _version{addr._version} {}
 
   /**
    * assign operator from ipv4
    */
-  ip_addr& operator=(ipv4 const& addr) noexcept {
+  ip_address& operator=(ipv4 const& addr) noexcept {
     _dword[0] = addr.get_data();
     _dword[1] = _dword[2] = _dword[3] = 0;
     _version = version::e_v4;
@@ -64,17 +64,17 @@ class ip_addr {
   /**
    * assign operator from ipv6
    */
-  ip_addr& operator=(ipv6 const& addr) noexcept;
+  ip_address& operator=(ipv6 const& addr) noexcept;
 
   /**
    * assign operator from ip_addr
    */
-  ip_addr& operator=(ip_addr const& addr) noexcept;
+  ip_address& operator=(ip_address const& addr) noexcept;
 
   /**
    * operator less
    */
-  bool operator<(ip_addr const& addr) const noexcept {
+  bool operator<(ip_address const& addr) const noexcept {
     return _qword[0] < addr._qword[0] ||
            (!(addr._qword[0] < _qword[0]) && _qword[1] < addr._qword[1]);
   }
@@ -82,7 +82,7 @@ class ip_addr {
   /**
    * operator equal
    */
-  bool operator==(ip_addr const& addr) const noexcept {
+  bool operator==(ip_address const& addr) const noexcept {
     return _version == addr._version && _qword[0] == addr._qword[0] &&
            _qword[1] == addr._qword[1];
   }
@@ -90,14 +90,14 @@ class ip_addr {
   /**
    * operator not equal
    */
-  bool operator!=(ip_addr const& addr) const noexcept {
+  bool operator!=(ip_address const& addr) const noexcept {
     return !(*this == addr);
   }
 
   /**
    * operator&
    */
-  ip_addr operator&(ip_addr const& addr) const noexcept;
+  ip_address operator&(ip_address const& addr) const noexcept;
 
   /**
    * create ipv4 address from current address
@@ -112,7 +112,7 @@ class ip_addr {
   /**
    * get current address in reverse order
    */
-  ip_addr reverse_order() const noexcept;
+  ip_address reverse_order() const noexcept;
 
   /**
    * get address version
@@ -159,7 +159,7 @@ class ip_addr {
  * @param filled address
  * @return string (ex. "192.168.0.1" or "fe80::23a1:b152")
  */
-std::string address_to_string(ip_addr const& address) noexcept;
+std::string address_to_string(ip_address const& address) noexcept;
 
 /**
  * build address from string representation
@@ -170,7 +170,7 @@ std::string address_to_string(ip_addr const& address) noexcept;
  * @return true if operation succeed
  */
 bool string_to_address(std::string const& str_address,
-                       ip_addr& address) noexcept;
+                       ip_address& address) noexcept;
 
 /**
  * put in ostream string address
@@ -178,7 +178,7 @@ bool string_to_address(std::string const& str_address,
  * @param strm ostream value
  * @param address
  */
-std::ostream& operator<<(std::ostream& strm, ip_addr const& address);
+std::ostream& operator<<(std::ostream& strm, ip_address const& address);
 
 /** @} */  // end of proto
 
