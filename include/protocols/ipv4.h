@@ -95,6 +95,9 @@ class ipv4 {
   uint32_t get_data() const noexcept { return _data; }
 
  private:
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wgnu-anonymous-struct"
+#pragma GCC diagnostic ignored "-Wnested-anon-types"
   union {
     struct {
       uint8_t _byte1;  ///< 1 byte
@@ -105,6 +108,7 @@ class ipv4 {
     uint8_t _bytes[e_bytes_size];  ///< bytes array
     uint32_t _data = 0;            ///< address as 32 bit
   };
+#pragma GCC diagnostic pop
 
   friend bool string_to_address(std::string const& str_address,
                                 ipv4& address) noexcept;

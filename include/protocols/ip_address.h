@@ -127,6 +127,9 @@ class ip_address {
   uint8_t const* get_data() const noexcept { return _bytes; }
 
  private:
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wgnu-anonymous-struct"
+#pragma GCC diagnostic ignored "-Wnested-anon-types"
   union {
     struct {
       uint8_t _byte1;   ///< byte 1
@@ -150,6 +153,7 @@ class ip_address {
     uint32_t _dword[ipv6::e_dword_size];  ///< uint32_t array
     uint8_t _bytes[ipv6::e_bytes_size];   ///< bytes array
   };
+#pragma GCC diagnostic pop
   version _version = version::e_none;  ///< address type
 };
 

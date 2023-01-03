@@ -137,6 +137,9 @@ class ipv6 {
   uint8_t const* get_data() const noexcept { return _bytes; }
 
  private:
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wgnu-anonymous-struct"
+#pragma GCC diagnostic ignored "-Wnested-anon-types"
   union {
     struct {
       uint8_t _byte1;   ///< byte 1
@@ -160,6 +163,7 @@ class ipv6 {
     uint32_t _dword[e_dword_size];  ///< uint32_t array
     uint8_t _bytes[e_bytes_size];   ///< bytes array
   };
+#pragma GCC diagnostic pop
 
   friend std::string address_to_string(ipv6 const& address) noexcept;
   friend bool string_to_address(std::string const& str_address,
