@@ -1,10 +1,14 @@
 #include <arpa/inet.h>
-#include <protocols/ipv4.h>
+#include <protocols/ip/v4.h>
 
 namespace jkl {
 namespace proto {
+namespace ip {
+namespace v4 {
 
-ipv4::ipv4(std::string const& addr) noexcept { string_to_address(addr, *this); }
+address::address(std::string const& addr) noexcept {
+  string_to_address(addr, *this);
+}
 
 std::string address_to_string(uint32_t addr) noexcept {
   return inet_ntoa({addr});
@@ -16,8 +20,11 @@ bool string_to_address(std::string const& str_address,
   return rc;
 }
 
-std::ostream& operator<<(std::ostream& strm, ipv4 const& address) {
+std::ostream& operator<<(std::ostream& strm, address const& address) {
   return strm << address_to_string(address);
 }
+
+}  // namespace v4
+}  // namespace ip
 }  // namespace proto
 }  // namespace jkl

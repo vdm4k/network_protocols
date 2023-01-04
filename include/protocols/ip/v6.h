@@ -3,6 +3,8 @@
 
 namespace jkl {
 namespace proto {
+namespace ip {
+namespace v6 {
 
 /** @addtogroup proto
  *  @{
@@ -10,7 +12,7 @@ namespace proto {
 /**
  * \brief ip v6 address wrapper
  */
-class ipv6 {
+class address {
  public:
   enum {
     e_bytes_size = 16,  ///< address size in bytes
@@ -21,53 +23,53 @@ class ipv6 {
   /**
    * default constructor
    */
-  ipv6() = default;
+  address() = default;
 
   /**
    * copy ctor
    */
-  ipv6(ipv6 const& addr) = default;
+  address(address const& addr) = default;
 
   /**
    * ctor from string representation
    *
    * ctor from string for example "fe80::23a1:b152"
    */
-  explicit ipv6(std::string const& addr) noexcept;
+  explicit address(std::string const& addr) noexcept;
 
   /**
    * ctor from uint64_t array
    */
-  explicit ipv6(uint64_t const (&addr)[e_qword_size]) noexcept
-      : ipv6(addr[0], addr[1]) {}
+  explicit address(uint64_t const (&addr)[e_qword_size]) noexcept
+      : address(addr[0], addr[1]) {}
 
   /**
    * ctor from uint32_t array
    */
-  explicit ipv6(uint32_t const (&addr)[e_dword_size]) noexcept
-      : ipv6(addr[0], addr[1], addr[2], addr[3]) {}
+  explicit address(uint32_t const (&addr)[e_dword_size]) noexcept
+      : address(addr[0], addr[1], addr[2], addr[3]) {}
 
   /**
    * ctor from byte array
    */
-  explicit ipv6(uint8_t const (&addr)[e_bytes_size]) noexcept;
+  explicit address(uint8_t const (&addr)[e_bytes_size]) noexcept;
 
   /**
    * ctor from uint64_t's
    */
-  ipv6(uint64_t qword1, uint64_t qword2) noexcept : _qword{qword1, qword2} {}
+  address(uint64_t qword1, uint64_t qword2) noexcept : _qword{qword1, qword2} {}
 
   /**
    * ctor from uint32_t's
    */
-  ipv6(uint32_t dword1, uint32_t dword2, uint32_t dword3,
+  address(uint32_t dword1, uint32_t dword2, uint32_t dword3,
        uint32_t dword4) noexcept
       : _dword{dword1, dword2, dword3, dword4} {}
 
   /**
    * ctor from bytes
    */
-  ipv6(uint8_t byte1, uint8_t byte2, uint8_t byte3, uint8_t byte4,
+  address(uint8_t byte1, uint8_t byte2, uint8_t byte3, uint8_t byte4,
        uint8_t byte5, uint8_t byte6, uint8_t byte7, uint8_t byte8,
        uint8_t byte9, uint8_t byte10, uint8_t byte11, uint8_t byte12,
        uint8_t byte13, uint8_t byte14, uint8_t byte15, uint8_t byte16) noexcept
@@ -91,7 +93,7 @@ class ipv6 {
   /**
    * assign operator
    */
-  ipv6& operator=(ipv6 const& r) noexcept {
+  address& operator=(address const& r) noexcept {
     _qword[0] = r._qword[0];
     _qword[1] = r._qword[1];
     return *this;
@@ -100,7 +102,7 @@ class ipv6 {
   /**
    * operator less
    */
-  bool operator<(ipv6 const& r) const noexcept {
+  bool operator<(address const& r) const noexcept {
     return _qword[0] < r._qword[0] ||
            (!(r._qword[0] < _qword[0]) && _qword[1] < r._qword[1]);
   }
@@ -108,27 +110,27 @@ class ipv6 {
   /**
    * operator equal
    */
-  bool operator==(ipv6 const& r) const noexcept {
+  bool operator==(address const& r) const noexcept {
     return _qword[0] == r._qword[0] && _qword[1] == r._qword[1];
   }
 
   /**
    * operator not equal
    */
-  bool operator!=(ipv6 const& r) const noexcept { return !(*this == r); }
+  bool operator!=(address const& r) const noexcept { return !(*this == r); }
 
   /**
    * operator&
    */
-  ipv6 operator&(ipv6 const& r) const noexcept {
-    return ipv6(_qword[0] & r._qword[0], _qword[1] & r._qword[1]);
+  address operator&(address const& r) const noexcept {
+    return address(_qword[0] & r._qword[0], _qword[1] & r._qword[1]);
   }
 
   /**
    * get current address in reverse order
    */
-  ipv6 reverse_order() const noexcept {
-    return ipv6(__builtin_bswap64(_qword[1]), __builtin_bswap64(_qword[0]));
+  address reverse_order() const noexcept {
+    return address(__builtin_bswap64(_qword[1]), __builtin_bswap64(_qword[0]));
   }
 
   /**
@@ -165,9 +167,9 @@ class ipv6 {
   };
 #pragma GCC diagnostic pop
 
-  friend std::string address_to_string(ipv6 const& address) noexcept;
+  friend std::string address_to_string(address const& address) noexcept;
   friend bool string_to_address(std::string const& str_address,
-                                ipv6& address) noexcept;
+                                address& address) noexcept;
 };
 
 /**
@@ -177,7 +179,7 @@ class ipv6 {
  * @return string (ex. "fe80::23a1:b152")
  */
 std::string address_to_string(
-    uint8_t const (&addr)[ipv6::e_bytes_size]) noexcept;
+    uint8_t const (&addr)[address::e_bytes_size]) noexcept;
 
 /**
  * convert address to string representation
@@ -185,7 +187,7 @@ std::string address_to_string(
  * @param address
  * @return string (ex. "fe80::23a1:b152")
  */
-inline std::string address_to_string(ipv6 const& address) noexcept {
+inline std::string address_to_string(address const& address) noexcept {
   return address_to_string(address._bytes);
 }
 
@@ -197,7 +199,7 @@ inline std::string address_to_string(ipv6 const& address) noexcept {
  * @return true if operation succeed
  */
 bool string_to_address(std::string const& str_address,
-                       uint8_t const (&addr)[ipv6::e_bytes_size]) noexcept;
+                       uint8_t const (&addr)[address::e_bytes_size]) noexcept;
 
 /**
  * build address from string representation
@@ -207,7 +209,7 @@ bool string_to_address(std::string const& str_address,
  * @return true if operation succeed
  */
 inline bool string_to_address(std::string const& str_address,
-                              ipv6& address) noexcept {
+                              address& address) noexcept {
   return string_to_address(str_address, address._bytes);
 }
 
@@ -217,8 +219,10 @@ inline bool string_to_address(std::string const& str_address,
  * @param strm ostream value
  * @param address
  */
-std::ostream& operator<<(std::ostream& strm, ipv6 const& address);
+std::ostream& operator<<(std::ostream& strm, address const& address);
 /** @} */  // end of proto
 
+}  // namespace v6
+}  // namespace ip
 }  // namespace proto
 }  // namespace jkl

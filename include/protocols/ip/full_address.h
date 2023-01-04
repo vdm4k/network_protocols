@@ -1,10 +1,11 @@
 #pragma once
 #include <tuple>
 
-#include "ip_address.h"
+#include "address.h"
 
 namespace jkl {
 namespace proto {
+namespace ip {
 
 /** @addtogroup proto
  *  @{
@@ -16,9 +17,12 @@ namespace proto {
 class full_address {
  public:
   full_address() = default;
-  full_address(ip_address const& addr, uint16_t port) : _address(addr), _port(port) {}
-  full_address(full_address const& faddr) : _address(faddr._address), _port(faddr._port) {}
-  full_address(full_address&& faddr) : _address(faddr._address), _port(faddr._port) {}
+  full_address(address const& addr, uint16_t port)
+      : _address(addr), _port(port) {}
+  full_address(full_address const& faddr)
+      : _address(faddr._address), _port(faddr._port) {}
+  full_address(full_address&& faddr)
+      : _address(faddr._address), _port(faddr._port) {}
   full_address& operator=(full_address const& faddr) {
     _address = faddr._address;
     _port = faddr._port;
@@ -42,15 +46,16 @@ class full_address {
     return address_to_string(_address) + ":" + std::to_string(_port);
   }
 
-  ip_address const& get_address() const noexcept { return _address; }
+  address const& get_address() const noexcept { return _address; }
   uint16_t get_port() const noexcept { return _port; }
 
  private:
-  ip_address _address;
+  address _address;
   uint16_t _port = 0;
 };
 
 /** @} */  // end of proto
 
+}  // namespace ip
 }  // namespace proto
 }  // namespace jkl

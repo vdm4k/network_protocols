@@ -3,6 +3,8 @@
 
 namespace jkl {
 namespace proto {
+namespace ip {
+namespace v4 {
 
 /** @defgroup proto
  *  @{
@@ -11,7 +13,7 @@ namespace proto {
 /**
  * \brief ip v4 address wrapper
  */
-class ipv4 {
+class address {
  public:
   enum {
     e_bytes_size = 4  ///< address size in bytes
@@ -20,29 +22,29 @@ class ipv4 {
   /**
    * default constructor
    */
-  ipv4() = default;
+  address() = default;
 
   /**
    * copy ctor
    */
-  ipv4(ipv4 const& addr) = default;
+  address(address const& addr) = default;
 
   /**
    * ctor from string representation
    *
    * ctor from string for example "127.0.0.1"
    */
-  explicit ipv4(std::string const& addr) noexcept;
+  explicit address(std::string const& addr) noexcept;
 
   /**
    * ctor from uint32_t
    */
-  explicit ipv4(uint32_t addr) noexcept : _data(addr) {}
+  explicit address(uint32_t addr) noexcept : _data(addr) {}
 
   /**
    * ctor from byte array
    */
-  explicit ipv4(uint8_t const (&bytes)[e_bytes_size]) noexcept
+  explicit address(uint8_t const (&bytes)[e_bytes_size]) noexcept
       : _byte1(bytes[0]),
         _byte2(bytes[1]),
         _byte3(bytes[2]),
@@ -53,18 +55,18 @@ class ipv4 {
    *
    * to build like 192,168,0,1
    */
-  ipv4(uint8_t byte1, uint8_t byte2, uint8_t byte3, uint8_t byte4) noexcept
+  address(uint8_t byte1, uint8_t byte2, uint8_t byte3, uint8_t byte4) noexcept
       : _byte1(byte1), _byte2(byte2), _byte3(byte3), _byte4(byte4) {}
 
   /**
    * get current address in reverse order
    */
-  ipv4 reverse_order() const noexcept { return ipv4(__builtin_bswap32(_data)); }
+  address reverse_order() const noexcept { return address(__builtin_bswap32(_data)); }
 
   /**
    * assign operator
    */
-  ipv4& operator=(ipv4 const& r) noexcept {
+  address& operator=(address const& r) noexcept {
     _data = r._data;
     return *this;
   }
@@ -72,22 +74,22 @@ class ipv4 {
   /**
    * operator less
    */
-  bool operator<(ipv4 const& r) const noexcept { return _data < r._data; }
+  bool operator<(address const& r) const noexcept { return _data < r._data; }
 
   /**
    * operator equal
    */
-  bool operator==(ipv4 const& r) const noexcept { return _data == r._data; }
+  bool operator==(address const& r) const noexcept { return _data == r._data; }
 
   /**
    * operator not equal
    */
-  bool operator!=(ipv4 const& r) const noexcept { return !(_data == r._data); }
+  bool operator!=(address const& r) const noexcept { return !(_data == r._data); }
 
   /**
    * operator&
    */
-  ipv4 operator&(ipv4 const& r) const noexcept { return ipv4(_data & r._data); }
+  address operator&(address const& r) const noexcept { return address(_data & r._data); }
 
   /**
    * get address as uint32_t
@@ -111,7 +113,7 @@ class ipv4 {
 #pragma GCC diagnostic pop
 
   friend bool string_to_address(std::string const& str_address,
-                                ipv4& address) noexcept;
+                                address& address) noexcept;
 };
 
 /**
@@ -128,7 +130,7 @@ std::string address_to_string(uint32_t addr) noexcept;
  * @param filled address
  * @return string (ex. "192.168.0.1")
  */
-inline std::string address_to_string(ipv4 const& address) noexcept {
+inline std::string address_to_string(address const& address) noexcept {
   return address_to_string(address.get_data());
 }
 
@@ -150,7 +152,7 @@ bool string_to_address(std::string const& str_address,
  * @return true if operation succeed
  */
 inline bool string_to_address(std::string const& str_address,
-                              ipv4& address) noexcept {
+                              address& address) noexcept {
   return string_to_address(str_address, address._data);
 }
 
@@ -160,8 +162,10 @@ inline bool string_to_address(std::string const& str_address,
  * @param strm ostream value
  * @param address
  */
-std::ostream& operator<<(std::ostream& strm, ipv4 const& address);
+std::ostream& operator<<(std::ostream& strm, address const& address);
 /** @} */  // end of proto
 
+}  // namespace v4
+}  // namespace ip
 }  // namespace proto
 }  // namespace jkl
