@@ -26,8 +26,6 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
 
-message ( STATUS " TRU TUU ${${PROJECT_NAME}_SOURCE_DIR}/include" )
-
 #sanitizer
 if(NOT DEFINED SANITIZER)
     option(SANITIZER "Enable address sanitizer" OFF)
