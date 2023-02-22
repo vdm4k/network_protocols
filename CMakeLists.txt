@@ -30,15 +30,14 @@ message ( STATUS " TRU TUU ${${PROJECT_NAME}_SOURCE_DIR}/include" )
 
 #sanitizer
 if(NOT DEFINED SANITIZER)
-    option(SANITIZER "Sanitizer" OFF)
+    option(SANITIZER "Enable address sanitizer" OFF)
 endif()
 
 if(SANITIZER)
-    target_compile_options(${PROJECT_NAME}
-        PRIVATE $<$<CONFIG:Debug>:-fsanitize=address>
-        PRIVATE $<$<CONFIG:Release>:-fsanitize=address>
-        PRIVATE $<$<CONFIG:ReleaseWithDebugInfo>:-fsanitize=address>)
+    target_compile_options(protocols INTERFACE -fsanitize=address -fPIC)
+    target_link_options(protocols INTERFACE -fsanitize=address)
 endif()
+
 
 #test
 option(WITH_TESTS "Build tests" OFF)
