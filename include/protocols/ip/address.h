@@ -38,13 +38,13 @@ class address {
   /**
    * ctor from ipv4
    */
-  explicit address(ip::v4::address const& addr) noexcept
+  address(ip::v4::address const& addr) noexcept
       : _dword{addr.get_data(), 0, 0, 0}, _version(version::e_v4) {}
 
   /**
    * ctor from ipv6
    */
-  explicit address(ip::v6::address const& addr) noexcept;
+  address(ip::v6::address const& addr) noexcept;
 
   /**
    * ctor from address

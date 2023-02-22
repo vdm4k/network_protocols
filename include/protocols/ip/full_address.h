@@ -54,6 +54,14 @@ class full_address {
   uint16_t _port = 0;
 };
 
+/**
+ * put in ostream string address
+ *
+ * @param strm ostream value
+ * @param address
+ */
+std::ostream& operator<<(std::ostream& strm, full_address const& address);
+
 /** @} */  // end of proto
 
 }  // namespace ip
