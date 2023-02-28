@@ -37,6 +37,7 @@ jobs:
 
     - name: Doxygen Action
       uses: mattnotmitt/doxygen-action@1.9.5
-      doxyfile-path: 'doxygen_make'
+      with:
+            doxyfile-path: 'doxygen_make'
 
       
