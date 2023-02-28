@@ -91,7 +91,7 @@ class full_address {
   address const& get_address() const noexcept { return _address; }
 
   /**
-   * get address
+   * get port
    */
   uint16_t get_port() const noexcept { return _port; }
 
