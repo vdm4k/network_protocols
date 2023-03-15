@@ -1,7 +1,7 @@
 #include <arpa/inet.h>
 #include <protocols/ip/v4.h>
 
-namespace jkl {
+namespace bro {
 namespace proto {
 namespace ip {
 namespace v4 {
@@ -27,4 +27,4 @@ std::ostream& operator<<(std::ostream& strm, address const& address) {
 }  // namespace v4
 }  // namespace ip
 }  // namespace proto
-}  // namespace jkl
+}  // namespace bro

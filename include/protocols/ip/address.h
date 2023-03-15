@@ -2,7 +2,7 @@
 #include "v4.h"
 #include "v6.h"
 
-namespace jkl {
+namespace bro {
 namespace proto {
 namespace ip {
 /** @addtogroup proto
@@ -191,4 +191,4 @@ std::ostream& operator<<(std::ostream& strm, address const& address);
 
 }  // namespace ip
 }  // namespace proto
-}  // namespace jkl
+}  // namespace bro

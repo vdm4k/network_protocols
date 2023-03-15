@@ -1,6 +1,6 @@
 #include <protocols/ip/full_address.h>
 
-namespace jkl {
+namespace bro {
 namespace proto {
 namespace ip {
 
@@ -10,4 +10,4 @@ std::ostream& operator<<(std::ostream& strm, const full_address& address) {
 
 }  // namespace ip
 }  // namespace proto
-}  // namespace jkl
+}  // namespace bro

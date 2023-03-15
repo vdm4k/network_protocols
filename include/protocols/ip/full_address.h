@@ -3,7 +3,7 @@
 
 #include "address.h"
 
-namespace jkl {
+namespace bro {
 namespace proto {
 namespace ip {
 
@@ -112,4 +112,4 @@ std::ostream& operator<<(std::ostream& strm, full_address const& address);
 
 }  // namespace ip
 }  // namespace proto
-}  // namespace jkl
+}  // namespace bro

@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 
-namespace jkl {
+namespace bro {
 namespace proto {
 namespace ip {
 namespace v4 {
@@ -168,4 +168,4 @@ std::ostream& operator<<(std::ostream& strm, address const& address);
 }  // namespace v4
 }  // namespace ip
 }  // namespace proto
-}  // namespace jkl
+}  // namespace bro
