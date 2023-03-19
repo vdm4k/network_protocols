@@ -3,6 +3,7 @@
 #include "v6.h"
 
 namespace bro {
+namespace net {
 namespace proto {
 namespace ip {
 /** @addtogroup proto
@@ -191,4 +192,5 @@ std::ostream& operator<<(std::ostream& strm, address const& address);
 
 }  // namespace ip
 }  // namespace proto
+}  // namespace net
 }  // namespace bro

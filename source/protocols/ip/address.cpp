@@ -3,6 +3,7 @@
 #include <string.h>
 
 namespace bro {
+namespace net {
 namespace proto {
 namespace ip {
 
@@ -92,4 +93,5 @@ std::ostream& operator<<(std::ostream& strm, address const& address) {
 }
 }  // namespace ip
 }  // namespace proto
+}  // namespace net
 }  // namespace bro

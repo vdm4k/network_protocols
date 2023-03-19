@@ -2,6 +2,7 @@
 #include <string>
 
 namespace bro {
+namespace net {
 namespace proto {
 namespace ip {
 namespace v4 {
@@ -61,7 +62,9 @@ class address {
   /**
    * get current address in reverse order
    */
-  address reverse_order() const noexcept { return address(__builtin_bswap32(_data)); }
+  address reverse_order() const noexcept {
+    return address(__builtin_bswap32(_data));
+  }
 
   /**
    * assign operator
@@ -84,12 +87,16 @@ class address {
   /**
    * operator not equal
    */
-  bool operator!=(address const& r) const noexcept { return !(_data == r._data); }
+  bool operator!=(address const& r) const noexcept {
+    return !(_data == r._data);
+  }
 
   /**
    * operator&
    */
-  address operator&(address const& r) const noexcept { return address(_data & r._data); }
+  address operator&(address const& r) const noexcept {
+    return address(_data & r._data);
+  }
 
   /**
    * get address as uint32_t
@@ -168,4 +175,5 @@ std::ostream& operator<<(std::ostream& strm, address const& address);
 }  // namespace v4
 }  // namespace ip
 }  // namespace proto
+}  // namespace net
 }  // namespace bro

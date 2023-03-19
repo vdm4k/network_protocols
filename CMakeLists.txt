@@ -1,21 +1,24 @@
 cmake_minimum_required(VERSION 3.1.0)
-project(protocols VERSION 0.0.2 DESCRIPTION "protocols" LANGUAGES CXX)
+project(network_protocols VERSION 0.0.2 DESCRIPTION "network protocols" LANGUAGES CXX)
 
-if(UNIX AND NOT APPLE)
-    set(COMMON_OS_SPECIFIC_OPTIONS "-g3;-ggdb3")
-endif()
+# cpp files
+set(H_FILES
+    include/protocols/ip/address.h
+    include/protocols/ip/full_address.h
+    include/protocols/ip/v4.h
+    include/protocols/ip/v6.h
+)
 
-set(COMMON_OPTIONS ${COMMON_OS_SPECIFIC_OPTIONS})
-set(DEBUG_OPTIONS "${COMMON_OPTIONS}")
-set(RELEASE_OPTIONS "-DNDEBUG;${COMMON_OPTIONS}")
-
-find_package(Threads REQUIRED)
-
-file(GLOB_RECURSE CPP_FILES ${${PROJECT_NAME}_SOURCE_DIR}/source/*.cpp)
-file(GLOB_RECURSE H_FILES ${${PROJECT_NAME}_SOURCE_DIR}/include/*.h)
+# cpp files
+set(CPP_FILES
+    source/protocols/ip/address.cpp
+    source/protocols/ip/full_address.cpp
+    source/protocols/ip/v4.cpp
+    source/protocols/ip/v6.cpp
+)
 
 add_library(${PROJECT_NAME} STATIC ${CPP_FILES} ${H_FILES})
-add_library(jkl::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+add_library(bro::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_11)
 target_compile_options(${PROJECT_NAME} PRIVATE "-Wall;-Wextra"
@@ -32,18 +35,6 @@ if(NOT DEFINED SANITIZER)
 endif()
 
 if(SANITIZER)
-    target_compile_options(protocols INTERFACE -fsanitize=address -fPIC)
-    target_link_options(protocols INTERFACE -fsanitize=address)
-endif()
-
-
-#test
-option(WITH_TESTS "Build tests" OFF)
-if(WITH_TESTS)
-    add_subdirectory(test)
-endif()
-
-if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/cmake/utils.cmake")
-    include("${CMAKE_CURRENT_LIST_DIR}/cmake/utils.cmake")
-    package_create()
+    target_compile_options(${PROJECT_NAME} INTERFACE -fsanitize=address -fPIC)
+    target_link_options(${PROJECT_NAME} INTERFACE -fsanitize=address)
 endif()

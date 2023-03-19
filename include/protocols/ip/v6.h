@@ -2,6 +2,7 @@
 #include <string>
 
 namespace bro {
+namespace net {
 namespace proto {
 namespace ip {
 namespace v6 {
@@ -63,16 +64,17 @@ class address {
    * ctor from uint32_t's
    */
   address(uint32_t dword1, uint32_t dword2, uint32_t dword3,
-       uint32_t dword4) noexcept
+          uint32_t dword4) noexcept
       : _dword{dword1, dword2, dword3, dword4} {}
 
   /**
    * ctor from bytes
    */
   address(uint8_t byte1, uint8_t byte2, uint8_t byte3, uint8_t byte4,
-       uint8_t byte5, uint8_t byte6, uint8_t byte7, uint8_t byte8,
-       uint8_t byte9, uint8_t byte10, uint8_t byte11, uint8_t byte12,
-       uint8_t byte13, uint8_t byte14, uint8_t byte15, uint8_t byte16) noexcept
+          uint8_t byte5, uint8_t byte6, uint8_t byte7, uint8_t byte8,
+          uint8_t byte9, uint8_t byte10, uint8_t byte11, uint8_t byte12,
+          uint8_t byte13, uint8_t byte14, uint8_t byte15,
+          uint8_t byte16) noexcept
       : _byte1(byte1),
         _byte2(byte2),
         _byte3(byte3),
@@ -225,4 +227,5 @@ std::ostream& operator<<(std::ostream& strm, address const& address);
 }  // namespace v6
 }  // namespace ip
 }  // namespace proto
+}  // namespace net
 }  // namespace bro
