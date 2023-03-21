@@ -2,10 +2,7 @@
 #include <protocols/ip/address.h>
 #include <string.h>
 
-namespace bro {
-namespace net {
-namespace proto {
-namespace ip {
+namespace bro::net::proto::ip {
 
 address::address(std::string const& addr) noexcept {
   if (addr.find(':') == std::string::npos) {
@@ -18,6 +15,19 @@ address::address(std::string const& addr) noexcept {
     }
   }
 }
+
+#ifdef __linux__
+address::address(in6_addr const& addr) noexcept : _version(version::e_v6) {
+  memcpy(_bytes, &addr, ip::v6::address::e_bytes_size);
+}
+
+in6_addr address::to_native_v6() const noexcept {
+  in6_addr addr;
+  memcpy(&addr, _bytes, ip::v6::address::e_bytes_size);
+  return addr;
+}
+
+#endif
 
 address::address(ip::v6::address const& addr) noexcept
     : _version(version::e_v6) {
@@ -61,12 +71,12 @@ address address::reverse_order() const noexcept {
   return {};
 }
 
-std::string address_to_string(address const& address) noexcept {
-  switch (address.get_version()) {
-    case address::version::e_v4:
-      return address_to_string(address.to_v4());
+std::string address::to_string() const {
+  switch (get_version()) {
+    case version::e_v4:
+      return address_to_string(to_v4());
     case address::version::e_v6:
-      return address_to_string(address.to_v6());
+      return address_to_string(to_v6());
     default:
       break;
   }
@@ -91,7 +101,4 @@ std::ostream& operator<<(std::ostream& strm, address const& address) {
   }
   return strm;
 }
-}  // namespace ip
-}  // namespace proto
-}  // namespace net
-}  // namespace bro
+}  // namespace bro::net::proto::ip

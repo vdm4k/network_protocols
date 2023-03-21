@@ -1,12 +1,13 @@
 #pragma once
+#include <optional>
 #include <tuple>
+#ifdef __linux__
+#include <netinet/in.h>
+#endif
 
 #include "address.h"
 
-namespace bro {
-namespace net {
-namespace proto {
-namespace ip {
+namespace bro::net::proto::ip {
 
 /** @addtogroup proto
  *  @{
@@ -39,6 +40,18 @@ class full_address {
    */
   full_address(full_address&& faddr)
       : _address(faddr._address), _port(faddr._port) {}
+
+#ifdef __linux__
+  /**
+   * ctor from ipv4 native linux
+   */
+  full_address(sockaddr_in const& addr) noexcept;
+
+  /**
+   * ctor from ipv6 native linux
+   */
+  full_address(sockaddr_in6 const& addr) noexcept;
+#endif
 
   /**
    * assign operator
@@ -96,8 +109,22 @@ class full_address {
    */
   uint16_t get_port() const noexcept { return _port; }
 
+#ifdef __linux__
+
+  /**
+   * get filled sockaddr_in
+   */
+  sockaddr_in to_native_v4() const noexcept;
+
+  /**
+   * get filled sockaddr_in6
+   */
+  sockaddr_in6 to_native_v6() noexcept;
+#endif
+
  private:
-  address _address;    ///< address
+  address _address;  ///< address
+  std::optional<uint32_t> _scope_id;
   uint16_t _port = 0;  ///< port
 };
 
@@ -111,7 +138,4 @@ std::ostream& operator<<(std::ostream& strm, full_address const& address);
 
 /** @} */  // end of proto
 
-}  // namespace ip
-}  // namespace proto
-}  // namespace net
-}  // namespace bro
+}  // namespace bro::net::proto::ip

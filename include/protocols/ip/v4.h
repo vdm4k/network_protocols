@@ -1,11 +1,10 @@
 #pragma once
 #include <string>
+#ifdef __linux__
+#include <netinet/in.h>
+#endif
 
-namespace bro {
-namespace net {
-namespace proto {
-namespace ip {
-namespace v4 {
+namespace bro::net::proto::ip::v4 {
 
 /** @defgroup proto
  *  @{
@@ -35,7 +34,7 @@ class address {
    *
    * ctor from string for example "127.0.0.1"
    */
-  explicit address(std::string const& addr) noexcept;
+  explicit address(std::string const& addr);
 
   /**
    * ctor from uint32_t
@@ -50,6 +49,10 @@ class address {
         _byte2(bytes[1]),
         _byte3(bytes[2]),
         _byte4(bytes[3]) {}
+
+#ifdef __linux__
+  address(in_addr const& addr) noexcept : _data(addr.s_addr) {}
+#endif
 
   /**
    * ctor from bytes
@@ -98,10 +101,24 @@ class address {
     return address(_data & r._data);
   }
 
+#ifdef __linux__
+  /**
+   * get native discriptor
+   */
+  in_addr to_native() const noexcept { return {_data}; }
+#endif
+
   /**
    * get address as uint32_t
    */
   uint32_t get_data() const noexcept { return _data; }
+
+  /**
+   * convert address to string representation
+   *
+   * @return string (ex. "192.168.0.1")
+   */
+  std::string to_string() const;
 
  private:
 #pragma GCC diagnostic push
@@ -129,7 +146,7 @@ class address {
  * @param filled address
  * @return string (ex. "192.168.0.1")
  */
-std::string address_to_string(uint32_t addr) noexcept;
+std::string address_to_string(uint32_t addr);
 
 /**
  * convert address to string representation
@@ -137,7 +154,7 @@ std::string address_to_string(uint32_t addr) noexcept;
  * @param filled address
  * @return string (ex. "192.168.0.1")
  */
-inline std::string address_to_string(address const& address) noexcept {
+inline std::string address_to_string(address const& address) {
   return address_to_string(address.get_data());
 }
 
@@ -172,8 +189,4 @@ inline bool string_to_address(std::string const& str_address,
 std::ostream& operator<<(std::ostream& strm, address const& address);
 /** @} */  // end of proto
 
-}  // namespace v4
-}  // namespace ip
-}  // namespace proto
-}  // namespace net
-}  // namespace bro
+}  // namespace bro::net::proto::ip::v4

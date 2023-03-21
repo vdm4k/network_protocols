@@ -1,11 +1,10 @@
 #pragma once
 #include <string>
+#ifdef __linux__
+#include <netinet/in.h>
+#endif
 
-namespace bro {
-namespace net {
-namespace proto {
-namespace ip {
-namespace v6 {
+namespace bro::net::proto::ip::v6 {
 
 /** @addtogroup proto
  *  @{
@@ -54,6 +53,14 @@ class address {
    * ctor from byte array
    */
   explicit address(uint8_t const (&addr)[e_bytes_size]) noexcept;
+
+#ifdef __linux__
+
+  /**
+   * ctor from ipv6 native linux
+   */
+  address(in6_addr const& addr) noexcept;
+#endif
 
   /**
    * ctor from uint64_t's
@@ -140,6 +147,20 @@ class address {
    */
   uint8_t const* get_data() const noexcept { return _bytes; }
 
+  /**
+   * convert address to string representation
+   *
+   * @return string (ex. "fe80::23a1:b152")
+   */
+  std::string to_string() const;
+
+#ifdef __linux__
+  /**
+   * get native discriptor
+   */
+  in6_addr to_native() const noexcept;
+#endif
+
  private:
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wgnu-anonymous-struct"
@@ -180,8 +201,7 @@ class address {
  * @param filled address
  * @return string (ex. "fe80::23a1:b152")
  */
-std::string address_to_string(
-    uint8_t const (&addr)[address::e_bytes_size]) noexcept;
+std::string address_to_string(uint8_t const (&addr)[address::e_bytes_size]);
 
 /**
  * convert address to string representation
@@ -224,8 +244,4 @@ inline bool string_to_address(std::string const& str_address,
 std::ostream& operator<<(std::ostream& strm, address const& address);
 /** @} */  // end of proto
 
-}  // namespace v6
-}  // namespace ip
-}  // namespace proto
-}  // namespace net
-}  // namespace bro
+}  // namespace bro::net::proto::ip::v6

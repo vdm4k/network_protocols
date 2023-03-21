@@ -1,11 +1,11 @@
 #pragma once
 #include "v4.h"
 #include "v6.h"
+#ifdef __linux__
+#include <netinet/in.h>
+#endif
 
-namespace bro {
-namespace net {
-namespace proto {
-namespace ip {
+namespace bro::net::proto::ip {
 /** @addtogroup proto
  *  @{
  */
@@ -35,6 +35,19 @@ class address {
    * ctor from string for example "127.0.0.1" or "fe80::23a1:b152")
    */
   explicit address(std::string const& addr) noexcept;
+
+#ifdef __linux__
+  /**
+   * ctor from ipv4 native linux
+   */
+  address(in_addr const& addr) noexcept
+      : _dword{addr.s_addr, 0, 0, 0}, _version(version::e_v4) {}
+
+  /**
+   * ctor from ipv6 native linux
+   */
+  address(in6_addr const& addr) noexcept;
+#endif
 
   /**
    * ctor from ipv4
@@ -113,6 +126,18 @@ class address {
     return ip::v6::address(_qword[0], _qword[1]);
   }
 
+#ifdef __linux__
+  /**
+   * get native discriptor
+   */
+  in_addr to_native_v4() const noexcept { return {_dword[0]}; }
+
+  /**
+   * get native discriptor
+   */
+  in6_addr to_native_v6() const noexcept;
+#endif
+
   /**
    * get current address in reverse order
    */
@@ -124,6 +149,13 @@ class address {
    * @return address version
    */
   version get_version() const noexcept { return _version; }
+
+  /**
+   * convert address to string representation
+   *
+   * @return string (ex. "192.168.0.1" or "fe80::23a1:b152")
+   */
+  std::string to_string() const;
 
   /**
    * get address as uint8_t *
@@ -167,7 +199,9 @@ class address {
  * @param filled address
  * @return string (ex. "192.168.0.1" or "fe80::23a1:b152")
  */
-std::string address_to_string(address const& address) noexcept;
+std::string address_to_string(address const& address) {
+  return address.to_string();
+}
 
 /**
  * build address from string representation
@@ -190,7 +224,4 @@ std::ostream& operator<<(std::ostream& strm, address const& address);
 
 /** @} */  // end of proto
 
-}  // namespace ip
-}  // namespace proto
-}  // namespace net
-}  // namespace bro
+}  // namespace bro::net::proto::ip
