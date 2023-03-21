@@ -199,7 +199,7 @@ class address {
  * @param filled address
  * @return string (ex. "192.168.0.1" or "fe80::23a1:b152")
  */
-std::string address_to_string(address const& address) {
+inline std::string address_to_string(address const& address) {
   return address.to_string();
 }
 
