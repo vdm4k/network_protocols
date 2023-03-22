@@ -47,7 +47,7 @@ sockaddr_in full_address::to_native_v4() const noexcept {
   return addr;
 }
 
-sockaddr_in6 full_address::to_native_v6() noexcept {
+sockaddr_in6 full_address::to_native_v6() const noexcept {
   sockaddr_in6 addr = {0, 0, 0, {{{0}}}, 0};
   addr.sin6_family = AF_INET6;
   addr.sin6_addr = _address.to_native_v6();
