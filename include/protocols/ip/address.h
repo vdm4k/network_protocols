@@ -14,14 +14,14 @@ namespace bro::net::proto::ip {
  * \brief ip v4/v6 address wrapper
  */
 class address {
- public:
+public:
   /**
    * ip address version
    */
   enum class version : uint16_t {
-    e_v4,   ///< ipv4 address
-    e_v6,   ///< ipv6 address
-    e_none  ///< address not set
+    e_v4,  ///< ipv4 address
+    e_v6,  ///< ipv6 address
+    e_none ///< address not set
   };
 
   /**
@@ -34,42 +34,42 @@ class address {
    *
    * ctor from string for example "127.0.0.1" or "fe80::23a1:b152")
    */
-  explicit address(std::string const& addr) noexcept;
+  explicit address(std::string const &addr) noexcept;
 
 #ifdef __linux__
   /**
    * ctor from ipv4 native linux
    */
-  address(in_addr const& addr) noexcept
+  address(in_addr const &addr) noexcept
       : _dword{addr.s_addr, 0, 0, 0}, _version(version::e_v4) {}
 
   /**
    * ctor from ipv6 native linux
    */
-  address(in6_addr const& addr) noexcept;
+  address(in6_addr const &addr) noexcept;
 #endif
 
   /**
    * ctor from ipv4
    */
-  address(ip::v4::address const& addr) noexcept
+  address(ip::v4::address const &addr) noexcept
       : _dword{addr.get_data(), 0, 0, 0}, _version(version::e_v4) {}
 
   /**
    * ctor from ipv6
    */
-  address(ip::v6::address const& addr) noexcept;
+  address(ip::v6::address const &addr) noexcept;
 
   /**
    * ctor from address
    */
-  address(address const& addr) noexcept
+  address(address const &addr) noexcept
       : _qword{addr._qword[0], addr._qword[1]}, _version{addr._version} {}
 
   /**
    * assign operator from ipv4
    */
-  address& operator=(ip::v4::address const& addr) noexcept {
+  address &operator=(ip::v4::address const &addr) noexcept {
     _dword[0] = addr.get_data();
     _dword[1] = _dword[2] = _dword[3] = 0;
     _version = version::e_v4;
@@ -79,17 +79,17 @@ class address {
   /**
    * assign operator from ipv6
    */
-  address& operator=(ip::v6::address const& addr) noexcept;
+  address &operator=(ip::v6::address const &addr) noexcept;
 
   /**
    * assign operator from ip_addr
    */
-  address& operator=(address const& addr) noexcept;
+  address &operator=(address const &addr) noexcept;
 
   /**
    * operator less
    */
-  bool operator<(address const& addr) const noexcept {
+  bool operator<(address const &addr) const noexcept {
     return _qword[0] < addr._qword[0] ||
            (!(addr._qword[0] < _qword[0]) && _qword[1] < addr._qword[1]);
   }
@@ -97,7 +97,7 @@ class address {
   /**
    * operator equal
    */
-  bool operator==(address const& addr) const noexcept {
+  bool operator==(address const &addr) const noexcept {
     return _version == addr._version && _qword[0] == addr._qword[0] &&
            _qword[1] == addr._qword[1];
   }
@@ -105,14 +105,14 @@ class address {
   /**
    * operator not equal
    */
-  bool operator!=(address const& addr) const noexcept {
+  bool operator!=(address const &addr) const noexcept {
     return !(*this == addr);
   }
 
   /**
    * operator&
    */
-  address operator&(address const& addr) const noexcept;
+  address operator&(address const &addr) const noexcept;
 
   /**
    * create ipv4 address from current address
@@ -160,37 +160,37 @@ class address {
   /**
    * get address as uint8_t *
    */
-  uint8_t const* get_data() const noexcept { return _bytes; }
+  uint8_t const *get_data() const noexcept { return _bytes; }
 
- private:
+private:
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wgnu-anonymous-struct"
 #pragma GCC diagnostic ignored "-Wnested-anon-types"
   union {
     struct {
-      uint8_t _byte1;   ///< byte 1
-      uint8_t _byte2;   ///< byte 2
-      uint8_t _byte3;   ///< byte 3
-      uint8_t _byte4;   ///< byte 4
-      uint8_t _byte5;   ///< byte 5
-      uint8_t _byte6;   ///< byte 6
-      uint8_t _byte7;   ///< byte 7
-      uint8_t _byte8;   ///< byte 8
-      uint8_t _byte9;   ///< byte 9
-      uint8_t _byte10;  ///< byte 10
-      uint8_t _byte11;  ///< byte 11
-      uint8_t _byte12;  ///< byte 12
-      uint8_t _byte13;  ///< byte 13
-      uint8_t _byte14;  ///< byte 14
-      uint8_t _byte15;  ///< byte 15
-      uint8_t _byte16;  ///< byte 16
+      uint8_t _byte1;  ///< byte 1
+      uint8_t _byte2;  ///< byte 2
+      uint8_t _byte3;  ///< byte 3
+      uint8_t _byte4;  ///< byte 4
+      uint8_t _byte5;  ///< byte 5
+      uint8_t _byte6;  ///< byte 6
+      uint8_t _byte7;  ///< byte 7
+      uint8_t _byte8;  ///< byte 8
+      uint8_t _byte9;  ///< byte 9
+      uint8_t _byte10; ///< byte 10
+      uint8_t _byte11; ///< byte 11
+      uint8_t _byte12; ///< byte 12
+      uint8_t _byte13; ///< byte 13
+      uint8_t _byte14; ///< byte 14
+      uint8_t _byte15; ///< byte 15
+      uint8_t _byte16; ///< byte 16
     };
-    uint64_t _qword[ip::v6::address::e_qword_size];  ///< uint64_t array
-    uint32_t _dword[ip::v6::address::e_dword_size];  ///< uint32_t array
-    uint8_t _bytes[ip::v6::address::e_bytes_size];   ///< bytes array
+    uint64_t _qword[ip::v6::address::e_qword_size]; ///< uint64_t array
+    uint32_t _dword[ip::v6::address::e_dword_size]; ///< uint32_t array
+    uint8_t _bytes[ip::v6::address::e_bytes_size];  ///< bytes array
   };
 #pragma GCC diagnostic pop
-  version _version = version::e_none;  ///< address type
+  version _version = version::e_none; ///< address type
 };
 
 /**
@@ -199,7 +199,7 @@ class address {
  * @param filled address
  * @return string (ex. "192.168.0.1" or "fe80::23a1:b152")
  */
-inline std::string address_to_string(address const& address) {
+inline std::string address_to_string(address const &address) {
   return address.to_string();
 }
 
@@ -211,8 +211,8 @@ inline std::string address_to_string(address const& address) {
  * @param address to fill
  * @return true if operation succeed
  */
-bool string_to_address(std::string const& str_address,
-                       address& address) noexcept;
+bool string_to_address(std::string const &str_address,
+                       address &address) noexcept;
 
 /**
  * put in ostream string address
@@ -220,8 +220,8 @@ bool string_to_address(std::string const& str_address,
  * @param strm ostream value
  * @param address
  */
-std::ostream& operator<<(std::ostream& strm, address const& address);
+std::ostream &operator<<(std::ostream &strm, address const &address);
 
-/** @} */  // end of proto
+/** @} */ // end of proto
 
-}  // namespace bro::net::proto::ip
+} // namespace bro::net::proto::ip

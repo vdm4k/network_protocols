@@ -4,12 +4,12 @@
 
 namespace bro::net::proto::ip::v6 {
 
-address::address(std::string const& addr) noexcept {
+address::address(std::string const &addr) noexcept {
   string_to_address(addr, *this);
 }
 
 #ifdef __linux__
-address::address(in6_addr const& addr) noexcept {
+address::address(in6_addr const &addr) noexcept {
   memcpy(_bytes, &addr, ip::v6::address::e_bytes_size);
 }
 
@@ -33,13 +33,13 @@ std::string address_to_string(uint8_t const (&addr)[address::e_bytes_size]) {
   return buffer;
 }
 
-bool string_to_address(std::string const& str_address,
+bool string_to_address(std::string const &str_address,
                        uint8_t const (&addr)[address::e_bytes_size]) noexcept {
-  return 1 == inet_pton(AF_INET6, str_address.c_str(), (void*)addr);
+  return 1 == inet_pton(AF_INET6, str_address.c_str(), (void *)addr);
 }
 
-std::ostream& operator<<(std::ostream& strm, address const& address) {
+std::ostream &operator<<(std::ostream &strm, address const &address) {
   return strm << address_to_string(address);
 }
 
-}  // namespace bro::net::proto::ip::v6
+} // namespace bro::net::proto::ip::v6

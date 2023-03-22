@@ -10,21 +10,21 @@ namespace bro::net::proto::ip {
 
 #ifdef __linux__
 
-full_address::full_address(sockaddr_in const& addr) noexcept
+full_address::full_address(sockaddr_in const &addr) noexcept
     : _address(addr.sin_addr), _port(htons(addr.sin_port)) {}
 
-full_address::full_address(sockaddr_in6 const& addr) noexcept
+full_address::full_address(sockaddr_in6 const &addr) noexcept
     : _address(addr.sin6_addr), _port(htons(addr.sin6_port)) {}
 
-uint32_t find_scope_id(const proto::ip::address& addr) {
+uint32_t find_scope_id(const proto::ip::address &addr) {
   uint32_t scope_id{0};
   struct ifaddrs *ifap{nullptr}, *ifa{nullptr};
   getifaddrs(&ifap);
 
   for (ifa = ifap; ifa; ifa = ifa->ifa_next) {
     if (ifa && ifa->ifa_addr && AF_INET6 == ifa->ifa_addr->sa_family) {
-      struct sockaddr_in6* in6 =
-          reinterpret_cast<struct sockaddr_in6*>(ifa->ifa_addr);
+      struct sockaddr_in6 *in6 =
+          reinterpret_cast<struct sockaddr_in6 *>(ifa->ifa_addr);
       char addr_buf[50];
       inet_ntop(AF_INET6, &in6->sin6_addr, addr_buf, sizeof(addr_buf));
       proto::ip::v6::address addr_s(addr_buf);
@@ -52,15 +52,17 @@ sockaddr_in6 full_address::to_native_v6() const noexcept {
   addr.sin6_family = AF_INET6;
   addr.sin6_addr = _address.to_native_v6();
   addr.sin6_port = htons(_port);
-  if (!_scope_id) _scope_id = find_scope_id(_address);
-  if (!_scope_id) addr.sin6_scope_id = *_scope_id;
+  if (!_scope_id)
+    _scope_id = find_scope_id(_address);
+  if (!_scope_id)
+    addr.sin6_scope_id = *_scope_id;
   return addr;
 }
 
 #endif
 
-std::ostream& operator<<(std::ostream& strm, const full_address& address) {
+std::ostream &operator<<(std::ostream &strm, const full_address &address) {
   return strm << address.to_string();
 }
 
-}  // namespace bro::net::proto::ip
+} // namespace bro::net::proto::ip

@@ -14,9 +14,9 @@ namespace bro::net::proto::ip::v4 {
  * \brief ip v4 address wrapper
  */
 class address {
- public:
+public:
   enum {
-    e_bytes_size = 4  ///< address size in bytes
+    e_bytes_size = 4 ///< address size in bytes
   };
 
   /**
@@ -27,14 +27,14 @@ class address {
   /**
    * copy ctor
    */
-  address(address const& addr) = default;
+  address(address const &addr) = default;
 
   /**
    * ctor from string representation
    *
    * ctor from string for example "127.0.0.1"
    */
-  explicit address(std::string const& addr);
+  explicit address(std::string const &addr);
 
   /**
    * ctor from uint32_t
@@ -45,13 +45,11 @@ class address {
    * ctor from byte array
    */
   explicit address(uint8_t const (&bytes)[e_bytes_size]) noexcept
-      : _byte1(bytes[0]),
-        _byte2(bytes[1]),
-        _byte3(bytes[2]),
-        _byte4(bytes[3]) {}
+      : _byte1(bytes[0]), _byte2(bytes[1]), _byte3(bytes[2]), _byte4(bytes[3]) {
+  }
 
 #ifdef __linux__
-  address(in_addr const& addr) noexcept : _data(addr.s_addr) {}
+  address(in_addr const &addr) noexcept : _data(addr.s_addr) {}
 #endif
 
   /**
@@ -72,7 +70,7 @@ class address {
   /**
    * assign operator
    */
-  address& operator=(address const& r) noexcept {
+  address &operator=(address const &r) noexcept {
     _data = r._data;
     return *this;
   }
@@ -80,24 +78,24 @@ class address {
   /**
    * operator less
    */
-  bool operator<(address const& r) const noexcept { return _data < r._data; }
+  bool operator<(address const &r) const noexcept { return _data < r._data; }
 
   /**
    * operator equal
    */
-  bool operator==(address const& r) const noexcept { return _data == r._data; }
+  bool operator==(address const &r) const noexcept { return _data == r._data; }
 
   /**
    * operator not equal
    */
-  bool operator!=(address const& r) const noexcept {
+  bool operator!=(address const &r) const noexcept {
     return !(_data == r._data);
   }
 
   /**
    * operator&
    */
-  address operator&(address const& r) const noexcept {
+  address operator&(address const &r) const noexcept {
     return address(_data & r._data);
   }
 
@@ -120,24 +118,24 @@ class address {
    */
   std::string to_string() const;
 
- private:
+private:
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wgnu-anonymous-struct"
 #pragma GCC diagnostic ignored "-Wnested-anon-types"
   union {
     struct {
-      uint8_t _byte1;  ///< 1 byte
-      uint8_t _byte2;  ///< 2 byte
-      uint8_t _byte3;  ///< 3 byte
-      uint8_t _byte4;  ///< 4 byte
+      uint8_t _byte1; ///< 1 byte
+      uint8_t _byte2; ///< 2 byte
+      uint8_t _byte3; ///< 3 byte
+      uint8_t _byte4; ///< 4 byte
     };
-    uint8_t _bytes[e_bytes_size];  ///< bytes array
-    uint32_t _data = 0;            ///< address as 32 bit
+    uint8_t _bytes[e_bytes_size]; ///< bytes array
+    uint32_t _data = 0;           ///< address as 32 bit
   };
 #pragma GCC diagnostic pop
 
-  friend bool string_to_address(std::string const& str_address,
-                                address& address) noexcept;
+  friend bool string_to_address(std::string const &str_address,
+                                address &address) noexcept;
 };
 
 /**
@@ -154,7 +152,7 @@ std::string address_to_string(uint32_t addr);
  * @param filled address
  * @return string (ex. "192.168.0.1")
  */
-inline std::string address_to_string(address const& address) {
+inline std::string address_to_string(address const &address) {
   return address_to_string(address.get_data());
 }
 
@@ -165,8 +163,8 @@ inline std::string address_to_string(address const& address) {
  * @param address to fill
  * @return true if operation succeed
  */
-bool string_to_address(std::string const& str_address,
-                       uint32_t& address) noexcept;
+bool string_to_address(std::string const &str_address,
+                       uint32_t &address) noexcept;
 
 /**
  * build address from string representation
@@ -175,8 +173,8 @@ bool string_to_address(std::string const& str_address,
  * @param address to fill
  * @return true if operation succeed
  */
-inline bool string_to_address(std::string const& str_address,
-                              address& address) noexcept {
+inline bool string_to_address(std::string const &str_address,
+                              address &address) noexcept {
   return string_to_address(str_address, address._data);
 }
 
@@ -186,7 +184,7 @@ inline bool string_to_address(std::string const& str_address,
  * @param strm ostream value
  * @param address
  */
-std::ostream& operator<<(std::ostream& strm, address const& address);
-/** @} */  // end of proto
+std::ostream &operator<<(std::ostream &strm, address const &address);
+/** @} */ // end of proto
 
-}  // namespace bro::net::proto::ip::v4
+} // namespace bro::net::proto::ip::v4
