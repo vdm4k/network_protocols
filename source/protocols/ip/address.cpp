@@ -1,4 +1,3 @@
-#include <arpa/inet.h>
 #include <protocols/ip/address.h>
 #include <string.h>
 
@@ -17,7 +16,8 @@ address::address(std::string const &addr) noexcept {
 }
 
 #ifdef __linux__
-address::address(in6_addr const &addr) noexcept : _version(version::e_v6) {
+address::address(in6_addr const &addr) noexcept
+  : _version(version::e_v6) {
   memcpy(_bytes, &addr, ip::v6::address::e_bytes_size);
 }
 
@@ -30,7 +30,7 @@ in6_addr address::to_native_v6() const noexcept {
 #endif
 
 address::address(ip::v6::address const &addr) noexcept
-    : _version(version::e_v6) {
+  : _version(version::e_v6) {
   memcpy(_bytes, addr.get_data(), ip::v6::address::e_bytes_size);
 }
 
@@ -51,8 +51,7 @@ address address::operator&(address const &addr) const noexcept {
   case version::e_v4:
     return address(ip::v4::address(_dword[0] & addr._dword[0]));
   case version::e_v6:
-    return address(ip::v6::address(_qword[0] & addr._qword[0],
-                                   _qword[1] & addr._qword[1]));
+    return address(ip::v6::address(_qword[0] & addr._qword[0], _qword[1] & addr._qword[1]));
   default:
     break;
   }

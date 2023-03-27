@@ -4,17 +4,19 @@
 #ifdef __linux__
 #include <arpa/inet.h>
 #include <ifaddrs.h>
-#endif
+#endif // __linux__
 
 namespace bro::net::proto::ip {
 
 #ifdef __linux__
 
 full_address::full_address(sockaddr_in const &addr) noexcept
-    : _address(addr.sin_addr), _port(htons(addr.sin_port)) {}
+  : _address(addr.sin_addr)
+  , _port(htons(addr.sin_port)) {}
 
 full_address::full_address(sockaddr_in6 const &addr) noexcept
-    : _address(addr.sin6_addr), _port(htons(addr.sin6_port)) {}
+  : _address(addr.sin6_addr)
+  , _port(htons(addr.sin6_port)) {}
 
 uint32_t find_scope_id(const proto::ip::address &addr) {
   uint32_t scope_id{0};
@@ -23,8 +25,7 @@ uint32_t find_scope_id(const proto::ip::address &addr) {
 
   for (ifa = ifap; ifa; ifa = ifa->ifa_next) {
     if (ifa && ifa->ifa_addr && AF_INET6 == ifa->ifa_addr->sa_family) {
-      struct sockaddr_in6 *in6 =
-          reinterpret_cast<struct sockaddr_in6 *>(ifa->ifa_addr);
+      struct sockaddr_in6 *in6 = reinterpret_cast<struct sockaddr_in6 *>(ifa->ifa_addr);
       char addr_buf[50];
       inet_ntop(AF_INET6, &in6->sin6_addr, addr_buf, sizeof(addr_buf));
       proto::ip::v6::address addr_s(addr_buf);
@@ -59,7 +60,7 @@ sockaddr_in6 full_address::to_native_v6() const noexcept {
   return addr;
 }
 
-#endif
+#endif // __linux__
 
 std::ostream &operator<<(std::ostream &strm, const full_address &address) {
   return strm << address.to_string();
