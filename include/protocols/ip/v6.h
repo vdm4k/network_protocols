@@ -12,7 +12,8 @@ namespace bro::net::proto::ip::v6 {
 /**
  * \brief ip v6 address wrapper
  */
-class address {
+class address
+{
 public:
   enum {
     e_bytes_size = 16, ///< address size in bytes
@@ -41,13 +42,13 @@ public:
    * ctor from uint64_t array
    */
   explicit address(uint64_t const (&addr)[e_qword_size]) noexcept
-      : address(addr[0], addr[1]) {}
+    : address(addr[0], addr[1]) {}
 
   /**
    * ctor from uint32_t array
    */
   explicit address(uint32_t const (&addr)[e_dword_size]) noexcept
-      : address(addr[0], addr[1], addr[2], addr[3]) {}
+    : address(addr[0], addr[1], addr[2], addr[3]) {}
 
   /**
    * ctor from byte array
@@ -65,27 +66,50 @@ public:
   /**
    * ctor from uint64_t's
    */
-  address(uint64_t qword1, uint64_t qword2) noexcept : _qword{qword1, qword2} {}
+  address(uint64_t qword1, uint64_t qword2) noexcept
+    : _qword{qword1, qword2} {}
 
   /**
    * ctor from uint32_t's
    */
-  address(uint32_t dword1, uint32_t dword2, uint32_t dword3,
-          uint32_t dword4) noexcept
-      : _dword{dword1, dword2, dword3, dword4} {}
+  address(uint32_t dword1, uint32_t dword2, uint32_t dword3, uint32_t dword4) noexcept
+    : _dword{dword1, dword2, dword3, dword4} {}
 
   /**
    * ctor from bytes
    */
-  address(uint8_t byte1, uint8_t byte2, uint8_t byte3, uint8_t byte4,
-          uint8_t byte5, uint8_t byte6, uint8_t byte7, uint8_t byte8,
-          uint8_t byte9, uint8_t byte10, uint8_t byte11, uint8_t byte12,
-          uint8_t byte13, uint8_t byte14, uint8_t byte15,
+  address(uint8_t byte1,
+          uint8_t byte2,
+          uint8_t byte3,
+          uint8_t byte4,
+          uint8_t byte5,
+          uint8_t byte6,
+          uint8_t byte7,
+          uint8_t byte8,
+          uint8_t byte9,
+          uint8_t byte10,
+          uint8_t byte11,
+          uint8_t byte12,
+          uint8_t byte13,
+          uint8_t byte14,
+          uint8_t byte15,
           uint8_t byte16) noexcept
-      : _byte1(byte1), _byte2(byte2), _byte3(byte3), _byte4(byte4),
-        _byte5(byte5), _byte6(byte6), _byte7(byte7), _byte8(byte8),
-        _byte9(byte9), _byte10(byte10), _byte11(byte11), _byte12(byte12),
-        _byte13(byte13), _byte14(byte14), _byte15(byte15), _byte16(byte16) {}
+    : _byte1(byte1)
+    , _byte2(byte2)
+    , _byte3(byte3)
+    , _byte4(byte4)
+    , _byte5(byte5)
+    , _byte6(byte6)
+    , _byte7(byte7)
+    , _byte8(byte8)
+    , _byte9(byte9)
+    , _byte10(byte10)
+    , _byte11(byte11)
+    , _byte12(byte12)
+    , _byte13(byte13)
+    , _byte14(byte14)
+    , _byte15(byte15)
+    , _byte16(byte16) {}
 
   /**
    * assign operator
@@ -100,8 +124,7 @@ public:
    * operator less
    */
   bool operator<(address const &r) const noexcept {
-    return _qword[0] < r._qword[0] ||
-           (!(r._qword[0] < _qword[0]) && _qword[1] < r._qword[1]);
+    return _qword[0] < r._qword[0] || (!(r._qword[0] < _qword[0]) && _qword[1] < r._qword[1]);
   }
 
   /**
@@ -114,7 +137,9 @@ public:
   /**
    * operator not equal
    */
-  bool operator!=(address const &r) const noexcept { return !(*this == r); }
+  bool operator!=(address const &r) const noexcept {
+    return !(*this == r);
+  }
 
   /**
    * operator&
@@ -133,7 +158,9 @@ public:
   /**
    * get address as uint8_t *
    */
-  uint8_t const *get_data() const noexcept { return _bytes; }
+  uint8_t const *get_data() const noexcept {
+    return _bytes;
+  }
 
   /**
    * convert address to string representation
@@ -150,11 +177,9 @@ public:
 #endif
 
 private:
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wgnu-anonymous-struct"
-#pragma GCC diagnostic ignored "-Wnested-anon-types"
   union {
-    struct {
+    struct
+    {
       uint8_t _byte1;  ///< byte 1
       uint8_t _byte2;  ///< byte 2
       uint8_t _byte3;  ///< byte 3
@@ -176,11 +201,9 @@ private:
     uint32_t _dword[e_dword_size]; ///< uint32_t array
     uint8_t _bytes[e_bytes_size];  ///< bytes array
   };
-#pragma GCC diagnostic pop
 
   friend std::string address_to_string(address const &address) noexcept;
-  friend bool string_to_address(std::string const &str_address,
-                                address &address) noexcept;
+  friend bool string_to_address(std::string const &str_address, address &address) noexcept;
 };
 
 /**
@@ -208,8 +231,7 @@ inline std::string address_to_string(address const &address) noexcept {
  * @param address to fill
  * @return true if operation succeed
  */
-bool string_to_address(std::string const &str_address,
-                       uint8_t const (&addr)[address::e_bytes_size]) noexcept;
+bool string_to_address(std::string const &str_address, uint8_t const (&addr)[address::e_bytes_size]) noexcept;
 
 /**
  * build address from string representation
@@ -218,8 +240,7 @@ bool string_to_address(std::string const &str_address,
  * @param address to fill
  * @return true if operation succeed
  */
-inline bool string_to_address(std::string const &str_address,
-                              address &address) noexcept {
+inline bool string_to_address(std::string const &str_address, address &address) noexcept {
   return string_to_address(str_address, address._bytes);
 }
 

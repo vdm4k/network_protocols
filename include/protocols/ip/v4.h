@@ -13,7 +13,8 @@ namespace bro::net::proto::ip::v4 {
 /**
  * \brief ip v4 address wrapper
  */
-class address {
+class address
+{
 public:
   enum {
     e_bytes_size = 4 ///< address size in bytes
@@ -39,17 +40,21 @@ public:
   /**
    * ctor from uint32_t
    */
-  explicit address(uint32_t addr) noexcept : _data(addr) {}
+  explicit address(uint32_t addr) noexcept
+    : _data(addr) {}
 
   /**
    * ctor from byte array
    */
   explicit address(uint8_t const (&bytes)[e_bytes_size]) noexcept
-      : _byte1(bytes[0]), _byte2(bytes[1]), _byte3(bytes[2]), _byte4(bytes[3]) {
-  }
+    : _byte1(bytes[0])
+    , _byte2(bytes[1])
+    , _byte3(bytes[2])
+    , _byte4(bytes[3]) {}
 
 #ifdef __linux__
-  address(in_addr const &addr) noexcept : _data(addr.s_addr) {}
+  address(in_addr const &addr) noexcept
+    : _data(addr.s_addr) {}
 #endif
 
   /**
@@ -58,7 +63,10 @@ public:
    * to build like 192,168,0,1
    */
   address(uint8_t byte1, uint8_t byte2, uint8_t byte3, uint8_t byte4) noexcept
-      : _byte1(byte1), _byte2(byte2), _byte3(byte3), _byte4(byte4) {}
+    : _byte1(byte1)
+    , _byte2(byte2)
+    , _byte3(byte3)
+    , _byte4(byte4) {}
 
   /**
    * get current address in reverse order
@@ -78,12 +86,16 @@ public:
   /**
    * operator less
    */
-  bool operator<(address const &r) const noexcept { return _data < r._data; }
+  bool operator<(address const &r) const noexcept {
+    return _data < r._data;
+  }
 
   /**
    * operator equal
    */
-  bool operator==(address const &r) const noexcept { return _data == r._data; }
+  bool operator==(address const &r) const noexcept {
+    return _data == r._data;
+  }
 
   /**
    * operator not equal
@@ -103,13 +115,17 @@ public:
   /**
    * get native discriptor
    */
-  in_addr to_native() const noexcept { return {_data}; }
+  in_addr to_native() const noexcept {
+    return {_data};
+  }
 #endif
 
   /**
    * get address as uint32_t
    */
-  uint32_t get_data() const noexcept { return _data; }
+  uint32_t get_data() const noexcept {
+    return _data;
+  }
 
   /**
    * convert address to string representation
@@ -119,11 +135,9 @@ public:
   std::string to_string() const;
 
 private:
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wgnu-anonymous-struct"
-#pragma GCC diagnostic ignored "-Wnested-anon-types"
   union {
-    struct {
+    struct
+    {
       uint8_t _byte1; ///< 1 byte
       uint8_t _byte2; ///< 2 byte
       uint8_t _byte3; ///< 3 byte
@@ -132,10 +146,8 @@ private:
     uint8_t _bytes[e_bytes_size]; ///< bytes array
     uint32_t _data = 0;           ///< address as 32 bit
   };
-#pragma GCC diagnostic pop
 
-  friend bool string_to_address(std::string const &str_address,
-                                address &address) noexcept;
+  friend bool string_to_address(std::string const &str_address, address &address) noexcept;
 };
 
 /**
@@ -163,8 +175,7 @@ inline std::string address_to_string(address const &address) {
  * @param address to fill
  * @return true if operation succeed
  */
-bool string_to_address(std::string const &str_address,
-                       uint32_t &address) noexcept;
+bool string_to_address(std::string const &str_address, uint32_t &address) noexcept;
 
 /**
  * build address from string representation
@@ -173,8 +184,7 @@ bool string_to_address(std::string const &str_address,
  * @param address to fill
  * @return true if operation succeed
  */
-inline bool string_to_address(std::string const &str_address,
-                              address &address) noexcept {
+inline bool string_to_address(std::string const &str_address, address &address) noexcept {
   return string_to_address(str_address, address._data);
 }
 

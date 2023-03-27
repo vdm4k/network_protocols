@@ -13,7 +13,8 @@ namespace bro::net::proto::ip {
 /**
  * \brief ip v4/v6 address wrapper
  */
-class address {
+class address
+{
 public:
   /**
    * ip address version
@@ -41,7 +42,8 @@ public:
    * ctor from ipv4 native linux
    */
   address(in_addr const &addr) noexcept
-      : _dword{addr.s_addr, 0, 0, 0}, _version(version::e_v4) {}
+    : _dword{addr.s_addr, 0, 0, 0}
+    , _version(version::e_v4) {}
 
   /**
    * ctor from ipv6 native linux
@@ -53,7 +55,8 @@ public:
    * ctor from ipv4
    */
   address(ip::v4::address const &addr) noexcept
-      : _dword{addr.get_data(), 0, 0, 0}, _version(version::e_v4) {}
+    : _dword{addr.get_data(), 0, 0, 0}
+    , _version(version::e_v4) {}
 
   /**
    * ctor from ipv6
@@ -64,7 +67,8 @@ public:
    * ctor from address
    */
   address(address const &addr) noexcept
-      : _qword{addr._qword[0], addr._qword[1]}, _version{addr._version} {}
+    : _qword{addr._qword[0], addr._qword[1]}
+    , _version{addr._version} {}
 
   /**
    * assign operator from ipv4
@@ -90,16 +94,14 @@ public:
    * operator less
    */
   bool operator<(address const &addr) const noexcept {
-    return _qword[0] < addr._qword[0] ||
-           (!(addr._qword[0] < _qword[0]) && _qword[1] < addr._qword[1]);
+    return _qword[0] < addr._qword[0] || (!(addr._qword[0] < _qword[0]) && _qword[1] < addr._qword[1]);
   }
 
   /**
    * operator equal
    */
   bool operator==(address const &addr) const noexcept {
-    return _version == addr._version && _qword[0] == addr._qword[0] &&
-           _qword[1] == addr._qword[1];
+    return _version == addr._version && _qword[0] == addr._qword[0] && _qword[1] == addr._qword[1];
   }
 
   /**
@@ -117,7 +119,9 @@ public:
   /**
    * create ipv4 address from current address
    */
-  ip::v4::address to_v4() const noexcept { return ip::v4::address(_dword[0]); }
+  ip::v4::address to_v4() const noexcept {
+    return ip::v4::address(_dword[0]);
+  }
 
   /**
    * create ipv6 address from current address
@@ -130,7 +134,9 @@ public:
   /**
    * get native discriptor
    */
-  in_addr to_native_v4() const noexcept { return {_dword[0]}; }
+  in_addr to_native_v4() const noexcept {
+    return {_dword[0]};
+  }
 
   /**
    * get native discriptor
@@ -148,7 +154,9 @@ public:
    *
    * @return address version
    */
-  version get_version() const noexcept { return _version; }
+  version get_version() const noexcept {
+    return _version;
+  }
 
   /**
    * convert address to string representation
@@ -160,14 +168,14 @@ public:
   /**
    * get address as uint8_t *
    */
-  uint8_t const *get_data() const noexcept { return _bytes; }
+  uint8_t const *get_data() const noexcept {
+    return _bytes;
+  }
 
 private:
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wgnu-anonymous-struct"
-#pragma GCC diagnostic ignored "-Wnested-anon-types"
   union {
-    struct {
+    struct
+    {
       uint8_t _byte1;  ///< byte 1
       uint8_t _byte2;  ///< byte 2
       uint8_t _byte3;  ///< byte 3
@@ -189,7 +197,6 @@ private:
     uint32_t _dword[ip::v6::address::e_dword_size]; ///< uint32_t array
     uint8_t _bytes[ip::v6::address::e_bytes_size];  ///< bytes array
   };
-#pragma GCC diagnostic pop
   version _version = version::e_none; ///< address type
 };
 
@@ -211,8 +218,7 @@ inline std::string address_to_string(address const &address) {
  * @param address to fill
  * @return true if operation succeed
  */
-bool string_to_address(std::string const &str_address,
-                       address &address) noexcept;
+bool string_to_address(std::string const &str_address, address &address) noexcept;
 
 /**
  * put in ostream string address
