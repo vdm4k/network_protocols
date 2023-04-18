@@ -10,7 +10,11 @@ address::address(std::string const &addr) {
 }
 
 std::string address::to_string() const {
-  return address_to_string(_data);
+  return address_to_string(_dword);
+}
+
+address address::reverse_order() const noexcept {
+  return address(__builtin_bswap32(_dword));
 }
 
 std::string address_to_string(uint32_t addr) {

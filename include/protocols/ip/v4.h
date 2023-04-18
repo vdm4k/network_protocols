@@ -13,8 +13,7 @@ namespace bro::net::proto::ip::v4 {
 /**
  * \brief ip v4 address wrapper
  */
-class address
-{
+class address {
 public:
   enum {
     e_bytes_size = 4 ///< address size in bytes
@@ -41,7 +40,7 @@ public:
    * ctor from uint32_t
    */
   explicit address(uint32_t addr) noexcept
-    : _data(addr) {}
+    : _dword(addr) {}
 
   /**
    * ctor from byte array
@@ -54,7 +53,7 @@ public:
 
 #ifdef __linux__
   address(in_addr const &addr) noexcept
-    : _data(addr.s_addr) {}
+    : _dword(addr.s_addr) {}
 #endif
 
   /**
@@ -71,15 +70,23 @@ public:
   /**
    * get current address in reverse order
    */
-  address reverse_order() const noexcept {
-    return address(__builtin_bswap32(_data));
+  address reverse_order() const noexcept;
+
+#ifdef __linux__
+  /**
+   * assign operator from ipv4 native linux
+   */
+  address &operator=(in_addr const &addr) noexcept {
+    _dword = addr.s_addr;
+    return *this;
   }
+#endif
 
   /**
    * assign operator
    */
   address &operator=(address const &r) noexcept {
-    _data = r._data;
+    _dword = r._dword;
     return *this;
   }
 
@@ -87,28 +94,28 @@ public:
    * operator less
    */
   bool operator<(address const &r) const noexcept {
-    return _data < r._data;
+    return _dword < r._dword;
   }
 
   /**
    * operator equal
    */
   bool operator==(address const &r) const noexcept {
-    return _data == r._data;
+    return _dword == r._dword;
   }
 
   /**
    * operator not equal
    */
   bool operator!=(address const &r) const noexcept {
-    return !(_data == r._data);
+    return !(_dword == r._dword);
   }
 
   /**
    * operator&
    */
   address operator&(address const &r) const noexcept {
-    return address(_data & r._data);
+    return address(_dword & r._dword);
   }
 
 #ifdef __linux__
@@ -116,7 +123,7 @@ public:
    * get native discriptor
    */
   in_addr to_native() const noexcept {
-    return {_data};
+    return {_dword};
   }
 #endif
 
@@ -124,7 +131,7 @@ public:
    * get address as uint32_t
    */
   uint32_t get_data() const noexcept {
-    return _data;
+    return _dword;
   }
 
   /**
@@ -136,15 +143,14 @@ public:
 
 private:
   union {
-    struct
-    {
+    struct {
       uint8_t _byte1; ///< 1 byte
       uint8_t _byte2; ///< 2 byte
       uint8_t _byte3; ///< 3 byte
       uint8_t _byte4; ///< 4 byte
     };
     uint8_t _bytes[e_bytes_size]; ///< bytes array
-    uint32_t _data = 0;           ///< address as 32 bit
+    uint32_t _dword = 0;          ///< address as 32 bit
   };
 
   friend bool string_to_address(std::string const &str_address, address &address) noexcept;
@@ -185,7 +191,7 @@ bool string_to_address(std::string const &str_address, uint32_t &address) noexce
  * @return true if operation succeed
  */
 inline bool string_to_address(std::string const &str_address, address &address) noexcept {
-  return string_to_address(str_address, address._data);
+  return string_to_address(str_address, address._dword);
 }
 
 /**

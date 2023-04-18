@@ -27,6 +27,11 @@ in6_addr address::to_native_v6() const noexcept {
   return addr;
 }
 
+address &address::operator=(in6_addr const &addr) noexcept {
+  _version = version::e_v6;
+  memcpy(_bytes, &addr, ip::v6::address::e_bytes_size);
+  return *this;
+}
 #endif
 
 address::address(ip::v6::address const &addr) noexcept

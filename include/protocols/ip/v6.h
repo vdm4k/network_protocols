@@ -12,8 +12,7 @@ namespace bro::net::proto::ip::v6 {
 /**
  * \brief ip v6 address wrapper
  */
-class address
-{
+class address {
 public:
   enum {
     e_bytes_size = 16, ///< address size in bytes
@@ -111,6 +110,12 @@ public:
     , _byte15(byte15)
     , _byte16(byte16) {}
 
+#ifdef __linux__
+  /**
+   * assign operator from ipv6 native linux
+   */
+  address &operator=(in6_addr const &addr) noexcept;
+#endif
   /**
    * assign operator
    */
@@ -151,9 +156,7 @@ public:
   /**
    * get current address in reverse order
    */
-  address reverse_order() const noexcept {
-    return address(__builtin_bswap64(_qword[1]), __builtin_bswap64(_qword[0]));
-  }
+  address reverse_order() const noexcept;
 
   /**
    * get address as uint8_t *
@@ -178,8 +181,7 @@ public:
 
 private:
   union {
-    struct
-    {
+    struct {
       uint8_t _byte1;  ///< byte 1
       uint8_t _byte2;  ///< byte 2
       uint8_t _byte3;  ///< byte 3

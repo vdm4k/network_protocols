@@ -13,8 +13,7 @@ namespace bro::net::proto::ip {
 /**
  * \brief ip v4/v6 address wrapper
  */
-class address
-{
+class address {
 public:
   /**
    * ip address version
@@ -69,6 +68,22 @@ public:
   address(address const &addr) noexcept
     : _qword{addr._qword[0], addr._qword[1]}
     , _version{addr._version} {}
+
+#ifdef __linux__
+  /**
+   * assign operator from ipv4 native linux
+   */
+  address &operator=(in_addr const &addr) noexcept {
+    _dword[0] = addr.s_addr;
+    _version = (version::e_v4);
+    return *this;
+  }
+
+  /**
+   * assign operator from ipv6 native linux
+   */
+  address &operator=(in6_addr const &addr) noexcept;
+#endif
 
   /**
    * assign operator from ipv4
@@ -133,6 +148,8 @@ public:
 #ifdef __linux__
   /**
    * get native discriptor
+   *
+   * \note we don't check here that current address is ipv4
    */
   in_addr to_native_v4() const noexcept {
     return {_dword[0]};
@@ -140,6 +157,8 @@ public:
 
   /**
    * get native discriptor
+   *
+   * \note we don't check here that current address is ipv6
    */
   in6_addr to_native_v6() const noexcept;
 #endif
@@ -172,10 +191,23 @@ public:
     return _bytes;
   }
 
+  /**
+   * check if address is ipv4
+   */
+  bool is_ipv4() const noexcept {
+    return _version == version::e_v4;
+  }
+
+  /**
+   * check if address is ipv6
+   */
+  bool is_ipv6() const noexcept {
+    return _version == version::e_v6;
+  }
+
 private:
   union {
-    struct
-    {
+    struct {
       uint8_t _byte1;  ///< byte 1
       uint8_t _byte2;  ///< byte 2
       uint8_t _byte3;  ///< byte 3
