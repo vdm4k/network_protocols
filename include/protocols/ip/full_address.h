@@ -27,19 +27,22 @@ public:
    * ctor from address and port
    */
   full_address(address const &addr, uint16_t port)
-      : _address(addr), _port(port) {}
+    : _address(addr)
+    , _port(port) {}
 
   /**
    * copy ctor
    */
   full_address(full_address const &faddr)
-      : _address(faddr._address), _port(faddr._port) {}
+    : _address(faddr._address)
+    , _port(faddr._port) {}
 
   /**
    * move ctor
    */
   full_address(full_address &&faddr)
-      : _address(faddr._address), _port(faddr._port) {}
+    : _address(faddr._address)
+    , _port(faddr._port) {}
 
 #ifdef __linux__
   /**
@@ -102,12 +105,30 @@ public:
   /**
    * get address
    */
-  address const &get_address() const noexcept { return _address; }
+  address const &get_address() const noexcept {
+    return _address;
+  }
 
   /**
    * get port
    */
-  uint16_t get_port() const noexcept { return _port; }
+  uint16_t get_port() const noexcept {
+    return _port;
+  }
+
+  /**
+   * set address
+   */
+  void set_address(address const &addr) noexcept {
+    _address = addr;
+  }
+
+  /**
+   * set port
+   */
+  void set_port(uint16_t port) noexcept {
+    _port = port;
+  }
 
 #ifdef __linux__
 
