@@ -1,16 +1,7 @@
 cmake_minimum_required(VERSION 3.3.2)
-project(protocols_test VERSION 1.0.0 DESCRIPTION "protocols library" LANGUAGES CXX)
+project(protocols_test VERSION 1.0.0 DESCRIPTION "protocols library tests" LANGUAGES CXX)
 
-if(UNIX AND NOT APPLE)
-    set(COMMON_OS_SPECIFIC_OPTIONS "-g3;-ggdb3")
-endif()
-
-set(COMMON_OPTIONS ${COMMON_OS_SPECIFIC_OPTIONS})
-set(DEBUG_OPTIONS "-O0;${COMMON_OPTIONS}")
-set(RELEASE_OPTIONS "-O2;-DNDEBUG;${COMMON_OPTIONS}")
-
-find_package(GTest REQUIRED)
-find_package(protocols REQUIRED)
+include("${PROJECT_SOURCE_DIR}/third_party/gtest.cmake")
 
 file(GLOB_RECURSE CPP_FILES ${${PROJECT_NAME}_SOURCE_DIR}/*.cpp)
 file(GLOB_RECURSE H_FILES   ${${PROJECT_NAME}_SOURCE_DIR}/*.h)
@@ -22,28 +13,21 @@ target_compile_options(${PROJECT_NAME} PUBLIC "-Wall;-Wextra"
     PRIVATE "$<$<CONFIG:DEBUG>:${DEBUG_OPTIONS}>"
     PRIVATE "$<$<CONFIG:RELEASE>:${RELEASE_OPTIONS}>")
 
-target_include_directories(${PROJECT_NAME}
-    PUBLIC
-    $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include/${PROJECT_NAME}>
-)
+enable_testing()
 
-if(NOT DEFINED SANITIZER)
-    option(SANITIZER "Sanitizer" OFF)
+if(NOT DEFINED WITH_SANITIZER)
+    option(WITH_SANITIZER "Sanitizer" OFF)
 endif()
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY INTERFACE_LINK_LIBRARIES
-    -Wl,--whole-archive,-pthread,--no-whole-archive)
-
-if(SANITIZER)
+if(WITH_SANITIZER)
     target_compile_options(${PROJECT_NAME} PRIVATE $<$<CONFIG:Debug>:-fsanitize=address>)
     target_link_libraries(${PROJECT_NAME} PRIVATE $<$<CONFIG:Debug>:-fsanitize=address>
-        protocols::protocols GTest::gtest GTest::gtest_main ${CMAKE_THREAD_LIBS_INIT})
+        network_protocols::network_protocols GTest::gtest GTest::gtest_main ${CMAKE_THREAD_LIBS_INIT})
 else()
     target_link_libraries(${PROJECT_NAME}
         PUBLIC
-        protocols::protocols GTest::gtest GTest::gtest_main ${CMAKE_THREAD_LIBS_INIT})
+        network_protocols::network_protocols GTest::gtest GTest::gtest_main ${CMAKE_THREAD_LIBS_INIT})
 endif()
 
-enable_testing()
-add_test(${PROJECT_NAME} ${PROJECT_NAME})
+include(GoogleTest)
+gtest_discover_tests(${PROJECT_NAME})

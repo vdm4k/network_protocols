@@ -5,6 +5,7 @@ namespace bro::net::proto::ip {
 
 address::address(std::string const &addr) noexcept {
   if (addr.find(':') == std::string::npos) {
+    _qword[0] = _qword[1] = 0;
     if (ip::v4::string_to_address(addr, _dword[0])) {
       _version = version::e_v4;
     }

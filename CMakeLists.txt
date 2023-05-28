@@ -19,6 +19,7 @@ set(CPP_FILES
 
 add_library(${PROJECT_NAME} STATIC ${CPP_FILES} ${H_FILES})
 add_library(bro::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+add_library(network_protocols::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 target_compile_options(${PROJECT_NAME} PRIVATE "-Wall;-Wextra"
@@ -38,3 +39,8 @@ if(WITH_SANITIZER)
     target_compile_options(${PROJECT_NAME} INTERFACE -fsanitize=address -fPIC)
     target_link_options(${PROJECT_NAME} INTERFACE -fsanitize=address)
 endif()
+
+option(WITH_TESTS "Build tests" OFF)
+if(WITH_TESTS)
+    add_subdirectory(test)
+endif(WITH_TESTS)
