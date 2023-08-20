@@ -22,9 +22,13 @@ add_library(bro::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 add_library(network_protocols::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
-target_compile_options(${PROJECT_NAME} PRIVATE "-Wall;-Wextra"
-    PUBLIC "$<$<CONFIG:DEBUG>:${DEBUG_OPTIONS}>"
-    PUBLIC "$<$<CONFIG:RELEASE>:${RELEASE_OPTIONS}>")
+if(MSVC)
+    target_compile_options(${TARGET_NAME} PRIVATE /W4 /WX)
+else()
+    target_compile_options(${PROJECT_NAME} PRIVATE "-Wall;-Wextra"
+        PUBLIC "$<$<CONFIG:DEBUG>:${DEBUG_OPTIONS}>"
+        PUBLIC "$<$<CONFIG:RELEASE>:${RELEASE_OPTIONS}>")
+endif()
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 target_include_directories(${PROJECT_NAME} PUBLIC
