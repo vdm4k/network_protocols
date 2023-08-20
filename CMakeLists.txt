@@ -26,6 +26,7 @@ target_compile_options(${PROJECT_NAME} PRIVATE "-Wall;-Wextra"
     PUBLIC "$<$<CONFIG:DEBUG>:${DEBUG_OPTIONS}>"
     PUBLIC "$<$<CONFIG:RELEASE>:${RELEASE_OPTIONS}>")
 
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 target_include_directories(${PROJECT_NAME} PUBLIC
     $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
