@@ -23,7 +23,7 @@ add_library(network_protocols::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 if(MSVC)
-    target_compile_options(${TARGET_NAME} PRIVATE /W4 /WX)
+    target_compile_options(${PROJECT_NAME} PRIVATE /W4 /WX)
 else()
     target_compile_options(${PROJECT_NAME} PRIVATE "-Wall;-Wextra"
         PUBLIC "$<$<CONFIG:DEBUG>:${DEBUG_OPTIONS}>"
